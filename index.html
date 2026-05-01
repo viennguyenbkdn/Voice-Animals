@@ -1,0 +1,172 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Thế Giới Động Vật Của Bé</title>
+    <style>
+        :root {
+            --bg: #fdfcf0;
+            --accent: #ff6b6b;
+        }
+
+        body {
+            margin: 0;
+            padding: 15px;
+            background-color: var(--bg);
+            font-family: 'Arial Rounded MT Bold', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 24px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 4px solid #f0f0f0;
+            box-shadow: 0 8px 0 #e0e0e0;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .card:active {
+            transform: translateY(6px);
+            box-shadow: 0 0 0 #e0e0e0;
+            border-color: var(--accent);
+        }
+
+        .animal-img {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            pointer-events: none;
+        }
+
+        .name {
+            margin-top: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #444;
+        }
+
+        @media (min-width: 480px) {
+            .grid { grid-template-columns: repeat(3, 1fr); }
+        }
+    </style>
+</head>
+<body>
+
+    <h2 style="color: #555; text-align: center;">🐾 CHẠM ĐỂ NGHE TIẾNG THẬT 🐾</h2>
+
+    <div class="grid">
+        <!-- Danh sách 16 con vật (Tất cả dùng chung 1 hàm interact) -->
+        <div class="card" onclick="interact(this, 'cho')">
+            <img src="cho.png" class="animal-img">
+            <span class="name">Con Chó</span>
+        </div>
+        <div class="card" onclick="interact(this, 'meo')">
+            <img src="meo.png" class="animal-img">
+            <span class="name">Con Mèo</span>
+        </div>
+        <div class="card" onclick="interact(this, 'heo')">
+            <img src="heo.png" class="animal-img">
+            <span class="name">Con Heo</span>
+        </div>
+        <div class="card" onclick="interact(this, 'ga')">
+            <img src="ga.png" class="animal-img">
+            <span class="name">Con Gà</span>
+        </div>
+        <div class="card" onclick="interact(this, 'vit')">
+            <img src="vit.png" class="animal-img">
+            <span class="name">Con Vịt</span>
+        </div>
+        <div class="card" onclick="interact(this, 'khi')">
+            <img src="khi.png" class="animal-img">
+            <span class="name">Con Khỉ</span>
+        </div>
+        <div class="card" onclick="interact(this, 'de')">
+            <img src="de.png" class="animal-img">
+            <span class="name">Con Dê</span>
+        </div>
+        <div class="card" onclick="interact(this, 'bo')">
+            <img src="bo.png" class="animal-img">
+            <span class="name">Con Bò</span>
+        </div>
+        <div class="card" onclick="interact(this, 'ech')">
+            <img src="ech.png" class="animal-img">
+            <span class="name">Con Ếch</span>
+        </div>
+        <div class="card" onclick="interact(this, 'ngua')">
+            <img src="ngua.png" class="animal-img">
+            <span class="name">Con Ngựa</span>
+        </div>
+        <div class="card" onclick="interact(this, 'chim')">
+            <img src="chim.png" class="animal-img">
+            <span class="name">Chim sẻ</span>
+        </div>
+        <div class="card" onclick="interact(this, 'chuot')">
+            <img src="chuot.png" class="animal-img">
+            <span class="name">Chuột</span>
+        </div>
+        <!-- 4 con chỉ cử động, không có tiếng (hoặc bạn có thể thêm mp3 nếu muốn) -->
+        <div class="card" onclick="interact(this, 'buom')">
+            <img src="buom.png" class="animal-img">
+            <span class="name">Bướm</span>
+        </div>
+        <div class="card" onclick="interact(this, 'ca')">
+            <img src="ca.png" class="animal-img">
+            <span class="name">Con Cá</span>
+        </div>
+        <div class="card" onclick="interact(this, 'soc')">
+            <img src="soc.png" class="animal-img">
+            <span class="name">Con Sóc</span>
+        </div>
+        <div class="card" onclick="interact(this, 'tho')">
+            <img src="tho.png" class="animal-img">
+            <span class="name">Con Thỏ</span>
+        </div>
+    </div>
+
+    <script>
+        let currentAudio = null;
+
+        function interact(card, id) {
+            const img = card.querySelector('.animal-img');
+            
+            // 1. Chuyển sang ảnh GIF
+            img.src = id + '.gif?t=' + new Date().getTime();
+
+            // 2. Phát file MP3 thật
+            // Dừng âm thanh cũ nếu đang phát để tránh bị chồng tiếng
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+            }
+
+            // Tạo đối tượng âm thanh mới nối với file id.mp3
+            currentAudio = new Audio(id + '.mp3');
+            currentAudio.play().catch(e => console.log("Thiếu file âm thanh: " + id + ".mp3"));
+
+            // 3. Sau 3 giây (hoặc khi audio kết thúc) quay lại ảnh tĩnh
+            setTimeout(() => {
+                img.src = id + '.png';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
