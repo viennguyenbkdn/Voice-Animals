@@ -7,15 +7,16 @@
     <title>Thế Giới Động Vật Của Bé</title>
     <style>
         :root {
-            --bg: #fdfcf0;
-            --accent: #ff6b6b;
+            --bg: #fffbeb; /* Màu nền vàng kem nhẹ nhàng cho mắt bé */
+            --border: #fde68a;
+            --accent: #fbbf24;
         }
 
         body {
             margin: 0;
-            padding: 15px;
+            padding: 20px 10px;
             background-color: var(--bg);
-            font-family: 'Arial Rounded MT Bold', sans-serif;
+            font-family: 'Arial Rounded MT Bold', 'Helvetica', sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -23,150 +24,211 @@
             -webkit-tap-highlight-color: transparent;
         }
 
+        h2 {
+            color: #92400e;
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            background: #fef3c7;
+            padding: 10px 20px;
+            border-radius: 50px;
+        }
+
         .grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
+            /* Layout 1 cột để ảnh to nhất có thể trên điện thoại */
+            grid-template-columns: 1fr; 
+            gap: 25px;
             width: 100%;
-            max-width: 500px;
+            max-width: 450px; /* Giới hạn độ rộng để không bị quá bè trên máy tính */
         }
 
         .card {
             background: white;
-            border-radius: 24px;
-            padding: 15px;
+            border-radius: 40px;
+            padding: 30px 15px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            border: 4px solid #f0f0f0;
-            box-shadow: 0 8px 0 #e0e0e0;
+            border: 6px solid var(--border);
+            box-shadow: 0 12px 0 #fcd34d;
             cursor: pointer;
-            transition: transform 0.1s;
+            transition: all 0.1s ease;
+        }
+
+        /* Khi đang được chọn (đang phát tiếng) */
+        .card.playing {
+            border-color: #f59e0b;
+            background-color: #fff9db;
+            transform: scale(1.02);
         }
 
         .card:active {
-            transform: translateY(6px);
-            box-shadow: 0 0 0 #e0e0e0;
-            border-color: var(--accent);
+            transform: translateY(8px) scale(0.98);
+            box-shadow: 0 4px 0 #fcd34d;
         }
 
         .animal-img {
-            width: 120px;
-            height: 120px;
+            /* Ảnh chiếm 85% chiều rộng thẻ để đảm bảo cực to */
+            width: 85%;
+            height: auto;
+            max-height: 250px;
             object-fit: contain;
             pointer-events: none;
+            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.1));
         }
 
         .name {
-            margin-top: 10px;
-            font-size: 1.2rem;
+            margin-top: 20px;
+            font-size: 1.8rem; /* Chữ to cho bé và ba mẹ cùng đọc */
             font-weight: bold;
-            color: #444;
+            color: #78350f;
         }
 
-        @media (min-width: 480px) {
-            .grid { grid-template-columns: repeat(3, 1fr); }
+        footer {
+            margin-top: 40px;
+            color: #92400e;
+            font-size: 0.9rem;
+            opacity: 0.6;
+        }
+
+        /* Trên máy tính bảng hoặc màn hình to, có thể chia 2 cột */
+        @media (min-width: 600px) {
+            .grid { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
 </head>
 <body>
 
-    <h2 style="color: #555; text-align: center;">🐾 CHẠM ĐỂ NGHE TIẾNG THẬT 🐾</h2>
+    <h2>🐾 BÉ CHẠM VÀO CON VẬT NHÉ 🐾</h2>
 
-    <div class="grid">
-        <!-- Danh sách 16 con vật (Tất cả dùng chung 1 hàm interact) -->
+    <div class="grid" id="mainGrid">
+        <!-- Danh sách con vật (Giữ nguyên cấu trúc ID để bạn không phải đổi tên file) -->
         <div class="card" onclick="interact(this, 'cho')">
-            <img src="cho.png" class="animal-img">
+            <img src="cho.png" class="animal-img" id="img-cho">
             <span class="name">Con Chó</span>
         </div>
         <div class="card" onclick="interact(this, 'meo')">
-            <img src="meo.png" class="animal-img">
+            <img src="meo.png" class="animal-img" id="img-meo">
             <span class="name">Con Mèo</span>
         </div>
         <div class="card" onclick="interact(this, 'heo')">
-            <img src="heo.png" class="animal-img">
+            <img src="heo.png" class="animal-img" id="img-heo">
             <span class="name">Con Heo</span>
         </div>
         <div class="card" onclick="interact(this, 'ga')">
-            <img src="ga.png" class="animal-img">
+            <img src="ga.png" class="animal-img" id="img-ga">
             <span class="name">Con Gà</span>
         </div>
         <div class="card" onclick="interact(this, 'vit')">
-            <img src="vit.png" class="animal-img">
+            <img src="vit.png" class="animal-img" id="img-vit">
             <span class="name">Con Vịt</span>
         </div>
         <div class="card" onclick="interact(this, 'khi')">
-            <img src="khi.png" class="animal-img">
+            <img src="khi.png" class="animal-img" id="img-khi">
             <span class="name">Con Khỉ</span>
         </div>
         <div class="card" onclick="interact(this, 'de')">
-            <img src="de.png" class="animal-img">
+            <img src="de.png" class="animal-img" id="img-de">
             <span class="name">Con Dê</span>
         </div>
         <div class="card" onclick="interact(this, 'bo')">
-            <img src="bo.png" class="animal-img">
+            <img src="bo.png" class="animal-img" id="img-bo">
             <span class="name">Con Bò</span>
         </div>
         <div class="card" onclick="interact(this, 'ech')">
-            <img src="ech.png" class="animal-img">
+            <img src="ech.png" class="animal-img" id="img-ech">
             <span class="name">Con Ếch</span>
         </div>
         <div class="card" onclick="interact(this, 'ngua')">
-            <img src="ngua.png" class="animal-img">
+            <img src="ngua.png" class="animal-img" id="img-ngua">
             <span class="name">Con Ngựa</span>
         </div>
         <div class="card" onclick="interact(this, 'chim')">
-            <img src="chim.png" class="animal-img">
+            <img src="chim.png" class="animal-img" id="img-chim">
             <span class="name">Chim sẻ</span>
         </div>
         <div class="card" onclick="interact(this, 'chuot')">
-            <img src="chuot.png" class="animal-img">
+            <img src="chuot.png" class="animal-img" id="img-chuot">
             <span class="name">Chuột</span>
         </div>
-        <!-- 4 con chỉ cử động, không có tiếng (hoặc bạn có thể thêm mp3 nếu muốn) -->
         <div class="card" onclick="interact(this, 'buom')">
-            <img src="buom.png" class="animal-img">
+            <img src="buom.png" class="animal-img" id="img-buom">
             <span class="name">Bướm</span>
         </div>
         <div class="card" onclick="interact(this, 'ca')">
-            <img src="ca.png" class="animal-img">
+            <img src="ca.png" class="animal-img" id="img-ca">
             <span class="name">Con Cá</span>
         </div>
         <div class="card" onclick="interact(this, 'soc')">
-            <img src="soc.png" class="animal-img">
+            <img src="soc.png" class="animal-img" id="img-soc">
             <span class="name">Con Sóc</span>
         </div>
         <div class="card" onclick="interact(this, 'tho')">
-            <img src="tho.png" class="animal-img">
+            <img src="tho.png" class="animal-img" id="img-tho">
             <span class="name">Con Thỏ</span>
         </div>
     </div>
 
+    <footer>Dành cho bé yêu của ba mẹ ❤️</footer>
+
     <script>
         let currentAudio = null;
+        let currentActiveCard = null;
+        let currentActiveId = null;
 
         function interact(card, id) {
             const img = card.querySelector('.animal-img');
-            
-            // 1. Chuyển sang ảnh GIF
+
+            // 1. Nếu đang phát chính con đó -> Bấm vào lần nữa để TẮT (Tiện cho ba mẹ)
+            if (currentActiveId === id) {
+                stopAll();
+                return;
+            }
+
+            // 2. Dừng con cũ trước khi bật con mới
+            stopAll();
+
+            // 3. Đánh dấu con mới đang hoạt động
+            currentActiveCard = card;
+            currentActiveId = id;
+            card.classList.add('playing');
+
+            // 4. Chuyển sang ảnh GIF (Cử động liên tục)
             img.src = id + '.gif?t=' + new Date().getTime();
 
-            // 2. Phát file MP3 thật
-            // Dừng âm thanh cũ nếu đang phát để tránh bị chồng tiếng
+            // 5. Phát âm thanh MP3 (Lặp vô tận)
+            currentAudio = new Audio(id + '.mp3');
+            currentAudio.loop = true; // QUAN TRỌNG: Phát liên tục
+            currentAudio.play().catch(e => {
+                console.log("Thiếu file: " + id + ".mp3");
+                // Nếu thiếu mp3 thì vẫn để GIF chạy cho bé xem
+            });
+        }
+
+        function stopAll() {
+            // Dừng âm thanh
             if (currentAudio) {
                 currentAudio.pause();
                 currentAudio.currentTime = 0;
+                currentAudio = null;
             }
 
-            // Tạo đối tượng âm thanh mới nối với file id.mp3
-            currentAudio = new Audio(id + '.mp3');
-            currentAudio.play().catch(e => console.log("Thiếu file âm thanh: " + id + ".mp3"));
+            // Trả ảnh về trạng thái tĩnh và xóa hiệu ứng viền
+            if (currentActiveCard) {
+                const activeImg = currentActiveCard.querySelector('.animal-img');
+                activeImg.src = currentActiveId + '.png';
+                currentActiveCard.classList.remove('playing');
+            }
 
-            // 3. Sau 3 giây (hoặc khi audio kết thúc) quay lại ảnh tĩnh
-            setTimeout(() => {
-                img.src = id + '.png';
-            }, 3000);
+            currentActiveCard = null;
+            currentActiveId = null;
         }
+        
+        // Đảm bảo âm thanh tắt hoàn toàn khi tab bị ẩn hoặc đóng
+        document.addEventListener("visibilitychange", () => {
+            if (document.hidden) stopAll();
+        });
     </script>
 </body>
 </html>
